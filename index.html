@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Glowing Heart</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #000;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        button {
+            background-color: #ff0040;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 0 10px #ff0040;
+        }
+
+        button:hover {
+            background-color: #ff3366;
+        }
+
+        button:active {
+            background-color: #e60036;
+        }
+
+        #resetButton {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <button id="startButton">Click Here for a Surprise</button>
+    <button id="resetButton">Want to Try Again?</button>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const startButton = document.getElementById('startButton');
+        const resetButton = document.getElementById('resetButton');
+
+        canvas.width = window.innerWidth * 0.8;
+        canvas.height = window.innerHeight * 0.8;
+
+        function heartFunction(t) {
+            const x = 16 * Math.pow(Math.sin(t), 3);
+            const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+            return { x, y };
+        }
+
+        function drawHeartWithLines(progress) {
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const scale = 15;
+
+            for (let i = 0; i <= progress; i++) {
+                const t1 = (i / 600) * 2 * Math.PI;
+                const t2 = ((i + 1) / 600) * 2 * Math.PI;
+
+                const point1 = heartFunction(t1);
+                const point2 = heartFunction(t2);
+
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(centerX + point1.x * scale, centerY + point1.y * scale);
+                ctx.lineTo(centerX + point2.x * scale, centerY + point2.y * scale);
+                ctx.closePath();
+
+                ctx.strokeStyle = `rgba(255, 0, 0, ${Math.random() * 0.5 + 0.5})`;
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+            }
+        }
+
+        function glowingEffect() {
+            const gradient = ctx.createRadialGradient(
+                canvas.width / 2,
+                canvas.height / 2,
+                50,
+                canvas.width / 2,
+                canvas.height / 2,
+                canvas.width / 3
+            );
+            gradient.addColorStop(0, 'rgba(255, 0, 0, 0.8)');
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function softGlowEffect() {
+            const gradient = ctx.createRadialGradient(
+                canvas.width / 2,
+                canvas.height / 2,
+                0,
+                canvas.width / 2,
+                canvas.height / 2,
+                canvas.width / 2
+            );
+            gradient.addColorStop(0, 'rgba(255, 50, 50, 0.6)');
+            gradient.addColorStop(0.5, 'rgba(255, 0, 0, 0.3)');
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Redraw the heart with lines to keep it visible
+            drawHeartWithLines(600); 
+        }
+
+        let progress = 0;
+        let animationId;
+        let glowing = false;
+
+        function animateHeart() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (!glowing) {
+                glowingEffect();
+                drawHeartWithLines(progress);
+
+                if (progress < 600) {
+                    progress += 5;
+                }
+            } else {
+                softGlowEffect();
+            }
+
+            animationId = requestAnimationFrame(animateHeart);
+        }
+
+        function stopInsideEffect() {
+            glowing = true; // Switch to glowing after 5 seconds
+        }
+
+        // Start button functionality
+        startButton.addEventListener('click', () => {
+            canvas.style.display = 'block';
+            startButton.style.display = 'none';
+            resetButton.style.display = 'inline-block';
+
+            animateHeart(); // Start heart creation effect
+            setTimeout(stopInsideEffect, 5000); // Stop inside effect after 5 seconds
+        });
+
+        // Reset button functionality
+        resetButton.addEventListener('click', () => {
+            cancelAnimationFrame(animationId);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            canvas.style.display = 'none';
+            startButton.style.display = 'inline-block';
+            resetButton.style.display = 'none';
+
+            progress = 0; // Reset heart creation progress
+            glowing = false; // Reset glow state
+        });
+    </script>
+</body>
+</html>
