@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Suprise </title>
     <style>
         body {
@@ -18,18 +18,19 @@
         }
 
         canvas {
+            width: 90%; /* Scales canvas for smaller screens */
+            max-width: 600px;
+            height: 70vh;
             display: block;
-            width: 100%;
-            max-width: 90vw;
-            height: 70vh; /* Adjusted to ensure space for buttons */
         }
 
         .button-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin-top: 10px;
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            width: 100%;
         }
 
         button {
@@ -40,8 +41,8 @@
             font-size: 18px;
             border-radius: 5px;
             cursor: pointer;
+            margin: 5px;
             box-shadow: 0 0 10px #ff0040;
-            margin: 10px 0;
         }
 
         button:hover {
@@ -51,17 +52,13 @@
         button:active {
             background-color: #e60036;
         }
-
-        #resetButton {
-            display: none;
-        }
     </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
     <div class="button-container">
         <button id="startButton">Click Here for a Surprise</button>
-        <button id="resetButton">Want to Try Again?</button>
+        <button id="resetButton" style="display: none;">Want to Try Again?</button>
     </div>
 
     <script>
@@ -70,8 +67,9 @@
         const startButton = document.getElementById('startButton');
         const resetButton = document.getElementById('resetButton');
 
-        canvas.width = window.innerWidth * 0.9;
-        canvas.height = window.innerHeight * 0.7;
+        // Dynamically set canvas size
+        canvas.width = Math.min(window.innerWidth * 0.9, 600); // Limits width to 600px
+        canvas.height = Math.min(window.innerHeight * 0.7, 400); // Limits height to 400px
 
         function heartFunction(t) {
             const x = 16 * Math.pow(Math.sin(t), 3);
@@ -82,7 +80,7 @@
         function drawHeartWithLines(progress) {
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
-            const scale = 15;
+            const scale = Math.min(canvas.width / 20, 15); // Scale adapts to screen size
 
             for (let i = 0; i <= progress; i++) {
                 const t1 = (i / 600) * 2 * Math.PI;
@@ -133,7 +131,7 @@
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            drawHeartWithLines(600); 
+            drawHeartWithLines(600);
         }
 
         let progress = 0;
@@ -161,6 +159,7 @@
             glowing = true;
         }
 
+        // Start button functionality
         startButton.addEventListener('click', () => {
             canvas.style.display = 'block';
             startButton.style.display = 'none';
@@ -170,6 +169,7 @@
             setTimeout(stopInsideEffect, 5000);
         });
 
+        // Reset button functionality
         resetButton.addEventListener('click', () => {
             cancelAnimationFrame(animationId);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -184,5 +184,8 @@
     </script>
 </body>
 </html>
+        
+            
+
        
     
