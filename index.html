@@ -44,18 +44,18 @@ button:hover {
     </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
-    <button id="startButton">Click Here for a Surprise</button>
-    <button id="resetButton">Want to Try Again?</button>
+    const canvas = document.getElementById('heartCanvas');
+const ctx = canvas.getContext('2d');
 
-    <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        const startButton = document.getElementById('startButton');
-        const resetButton = document.getElementById('resetButton');
+// Set canvas to full width and height dynamically
+canvas.width = window.innerWidth * 0.9; // 90% of viewport width
+canvas.height = window.innerHeight * 0.9; // 90% of viewport height
 
-        canvas.width = window.innerWidth * 0.8;
-        canvas.height = window.innerHeight * 0.8;
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth * 0.9;
+    canvas.height = window.innerHeight * 0.9;
+    drawHeart(); // Redraw the heart after resizing
+});
 
         function heartFunction(t) {
             const x = 16 * Math.pow(Math.sin(t), 3);
