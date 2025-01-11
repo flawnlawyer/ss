@@ -3,59 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suprise </title>
+    <title>Interactive Glowing Heart</title>
     <style>
         body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background: #000;
-    overflow: hidden;
-    font-family: Arial, sans-serif;
-}
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #000;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
 
-canvas {
-    /* Ensure the heart fits perfectly on the screen */
-    width: 90vw; /* Adjust width to fit within the viewport */
-    height: auto; /* Maintain the aspect ratio */
-    max-height: 90vh; /* Prevent overflow on smaller devices */
-}
+        canvas {
+            display: block;
+        }
 
-button {
-    background: #ff004f;
-    color: white;
-    padding: 15px 30px;
-    font-size: 16px;
-    border: none;
-    border-radius: 25px;
-    margin-top: 20px;
-    cursor: pointer;
-    box-shadow: 0 5px 15px rgba(255, 0, 79, 0.6);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+        button {
+            background-color: #ff0040;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 0 10px #ff0040;
+        }
 
-button:hover {
-    transform: scale(1.1);
-    box-shadow: 0 8px 20px rgba(255, 0, 79, 0.8);
-}
+        button:hover {
+            background-color: #ff3366;
+        }
+
+        button:active {
+            background-color: #e60036;
+        }
+
+        #resetButton {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    const canvas = document.getElementById('heartCanvas');
-const ctx = canvas.getContext('2d');
+    <canvas id="canvas"></canvas>
+    <button id="startButton">Click Here for a Surprise</button>
+    <button id="resetButton">Want to Try Again?</button>
 
-// Set canvas to full width and height dynamically
-canvas.width = window.innerWidth * 0.9; // 90% of viewport width
-canvas.height = window.innerHeight * 0.9; // 90% of viewport height
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const startButton = document.getElementById('startButton');
+        const resetButton = document.getElementById('resetButton');
 
-window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth * 0.9;
-    canvas.height = window.innerHeight * 0.9;
-    drawHeart(); // Redraw the heart after resizing
-});
+        canvas.width = window.innerWidth * 0.8;
+        canvas.height = window.innerHeight * 0.8;
 
         function heartFunction(t) {
             const x = 16 * Math.pow(Math.sin(t), 3);
