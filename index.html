@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>suprise</title>
+    <title>Interactive Glowing Heart</title>
     <style>
         body {
             display: flex;
@@ -19,6 +19,8 @@
 
         canvas {
             display: block;
+            width: 100%;
+            height: auto;
         }
 
         button {
@@ -57,8 +59,14 @@
         const startButton = document.getElementById('startButton');
         const resetButton = document.getElementById('resetButton');
 
-        canvas.width = window.innerWidth * 0.8;
-        canvas.height = window.innerHeight * 0.8;
+        // Set canvas size dynamically based on the viewport
+        function resizeCanvas() {
+            canvas.width = window.innerWidth * 0.9; // 90% of the viewport width
+            canvas.height = window.innerHeight * 0.9; // 90% of the viewport height
+        }
+
+        resizeCanvas(); // Set the initial size
+        window.addEventListener('resize', resizeCanvas); // Update on window resize
 
         function heartFunction(t) {
             const x = 16 * Math.pow(Math.sin(t), 3);
@@ -69,7 +77,7 @@
         function drawHeartWithLines(progress) {
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
-            const scale = 15;
+            const scale = Math.min(canvas.width, canvas.height) / 40; // Dynamic scaling
 
             for (let i = 0; i <= progress; i++) {
                 const t1 = (i / 600) * 2 * Math.PI;
@@ -121,7 +129,7 @@
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             // Redraw the heart with lines to keep it visible
-            drawHeartWithLines(600); 
+            drawHeartWithLines(600);
         }
 
         let progress = 0;
