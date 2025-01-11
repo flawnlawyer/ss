@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>suprise</title>
+    <title>Interactive Glowing Heart</title>
     <style>
         body {
             display: flex;
@@ -13,14 +13,23 @@
             height: 100vh;
             margin: 0;
             background: #000;
-            overflow: hidden;
             font-family: Arial, sans-serif;
+            overflow: hidden;
         }
 
         canvas {
             display: block;
             width: 100%;
-            height: auto;
+            max-width: 90vw;
+            height: 70vh; /* Adjusted to ensure space for buttons */
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
         }
 
         button {
@@ -31,8 +40,8 @@
             font-size: 18px;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 20px;
             box-shadow: 0 0 10px #ff0040;
+            margin: 10px 0;
         }
 
         button:hover {
@@ -50,8 +59,10 @@
 </head>
 <body>
     <canvas id="canvas"></canvas>
-    <button id="startButton">Click Here for a Surprise</button>
-    <button id="resetButton">Want to Try Again?</button>
+    <div class="button-container">
+        <button id="startButton">Click Here for a Surprise</button>
+        <button id="resetButton">Want to Try Again?</button>
+    </div>
 
     <script>
         const canvas = document.getElementById('canvas');
@@ -59,14 +70,8 @@
         const startButton = document.getElementById('startButton');
         const resetButton = document.getElementById('resetButton');
 
-        // Set canvas size dynamically based on the viewport
-        function resizeCanvas() {
-            canvas.width = window.innerWidth * 0.9; // 90% of the viewport width
-            canvas.height = window.innerHeight * 0.9; // 90% of the viewport height
-        }
-
-        resizeCanvas(); // Set the initial size
-        window.addEventListener('resize', resizeCanvas); // Update on window resize
+        canvas.width = window.innerWidth * 0.9;
+        canvas.height = window.innerHeight * 0.7;
 
         function heartFunction(t) {
             const x = 16 * Math.pow(Math.sin(t), 3);
@@ -77,7 +82,7 @@
         function drawHeartWithLines(progress) {
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
-            const scale = Math.min(canvas.width, canvas.height) / 40; // Dynamic scaling
+            const scale = 15;
 
             for (let i = 0; i <= progress; i++) {
                 const t1 = (i / 600) * 2 * Math.PI;
@@ -128,8 +133,7 @@
             ctx.fillStyle = gradient;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Redraw the heart with lines to keep it visible
-            drawHeartWithLines(600);
+            drawHeartWithLines(600); 
         }
 
         let progress = 0;
@@ -154,20 +158,18 @@
         }
 
         function stopInsideEffect() {
-            glowing = true; // Switch to glowing after 5 seconds
+            glowing = true;
         }
 
-        // Start button functionality
         startButton.addEventListener('click', () => {
             canvas.style.display = 'block';
             startButton.style.display = 'none';
             resetButton.style.display = 'inline-block';
 
-            animateHeart(); // Start heart creation effect
-            setTimeout(stopInsideEffect, 5000); // Stop inside effect after 5 seconds
+            animateHeart();
+            setTimeout(stopInsideEffect, 5000);
         });
 
-        // Reset button functionality
         resetButton.addEventListener('click', () => {
             cancelAnimationFrame(animationId);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -176,9 +178,11 @@
             startButton.style.display = 'inline-block';
             resetButton.style.display = 'none';
 
-            progress = 0; // Reset heart creation progress
-            glowing = false; // Reset glow state
+            progress = 0;
+            glowing = false;
         });
     </script>
 </body>
 </html>
+       
+    
